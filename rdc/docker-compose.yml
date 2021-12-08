@@ -8,10 +8,10 @@ services:
       # For X-Debug to connect to your IDE, we need to resolve the IP of your laptop.  We use the host.docker.internal
       # which will automatically resolve to the host on Docker containers.
       XDEBUG_CONFIG: ${XDEBUG_CONFIG}
-      
+
     env_file:
       - .env
-    restart: always
+    restart: on-failure
     depends_on:
       - db
     ports:
@@ -36,7 +36,7 @@ services:
     #image: ${MYSQL_IMAGE}
     build: docker-mysql
     env_file: .env
-    restart: always
+    restart: on-failure
     volumes:
       - ${MYSQL_DIR}:/var/lib/mysql
       - ${LOGS_DIR}:/var/log/mysql
@@ -50,7 +50,7 @@ services:
   cron:
     container_name: ${DOCKER_PREFIX}_cron
     build: docker-cron
-    restart: always
+    restart: on-failure
     env_file: .env
     depends_on:
       - web
@@ -64,7 +64,7 @@ services:
   mailhog:
     container_name: ${DOCKER_PREFIX}_mailhog
     build: docker-mailhog
-    restart: always
+    restart: on-failure
     env_file: .env
     depends_on:
       - web
@@ -89,7 +89,7 @@ services:
     depends_on:
       - web
       - db
-    #restart: always
+    restart: on-failure
     volumes:
       - ${PHPMYADMIN_PHP_OVERRIDES}:/usr/local/etc/php/conf.d/uploads.ini
     ports:
